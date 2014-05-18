@@ -16,7 +16,7 @@ STRIP := $(CROSS_COMPILE)strip
 SYSROOT := $(shell $(CC) --print-sysroot)
 
 CFLAGS := $(shell $(SYSROOT)/usr/bin/sdl-config --cflags) \
-	-DTARGET_$(PLATFORM) --std=c99 -pedantic -Wall -Wextra -Werror -Isrc/
+	-DTARGET_$(PLATFORM) --std=c99 -pedantic -Wall -Wextra -Isrc/
 LDFLAGS := $(shell $(SYSROOT)/usr/bin/sdl-config --libs) \
 	-lSDL_image -ljpeg
 
