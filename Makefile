@@ -3,7 +3,7 @@
 DEBUG ?= 0
 # Valid values: UNIX, GP2X, GCW_ZERO
 PLATFORM ?= GCW_ZERO
-CROSS_COMPILE ?= mipsel-linux-
+CROSS_COMPILE ?= /mnt/storage/rg350/RG350_buildroot/output/host/usr/bin/mipsel-linux-
 
 # END SETTINGS #####################################
 

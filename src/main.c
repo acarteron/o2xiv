@@ -73,7 +73,7 @@ int main( int argc, char *argv[] ) {
 		return -1;
 	}
 	
-	surface = SDL_SetVideoMode(320, 240, 16, SDL_HWSURFACE | SDL_DOUBLEBUF);
+	surface = SDL_SetVideoMode(640, 480, 16, SDL_HWSURFACE | SDL_DOUBLEBUF);
 	if (!surface) {
 		printf("%s:%d\n", __FILE__, __LINE__);
 		return -1;
@@ -83,9 +83,9 @@ int main( int argc, char *argv[] ) {
 	SDL_ShowCursor(0);
 #endif /* TARGET_GP2X */
 	
-	scaled_rot[0] = SDL_CreateRGBSurfaceFrom(malloc(320 * 240 * 2), 320, 240, 16, 320 * 2, 0, 0, 0, 0);
-	scaled_rot[1] = SDL_CreateRGBSurfaceFrom(malloc(240 * 320 * 2), 240, 320, 16, 240 * 2, 0, 0, 0, 0);
-	scaled_rot[2] = SDL_CreateRGBSurfaceFrom(malloc(320 * 240 * 2), 320, 240, 16, 320 * 2, 0, 0, 0, 0);
+	scaled_rot[0] = SDL_CreateRGBSurfaceFrom(malloc(640 * 480 * 2), 640, 480, 16, 640 * 2, 0, 0, 0, 0);
+	scaled_rot[1] = SDL_CreateRGBSurfaceFrom(malloc(480 * 640 * 2), 480, 640, 16, 480 * 2, 0, 0, 0, 0);
+	scaled_rot[2] = SDL_CreateRGBSurfaceFrom(malloc(640 * 480 * 2), 640, 480, 16, 640 * 2, 0, 0, 0, 0);
 	scaled_rot[3] = scaled_rot[1];
 	
 	init_input();
@@ -245,8 +245,8 @@ int main( int argc, char *argv[] ) {
 			// display notes
 			for (unsigned int i = 0; i < countof(note_delay); i++) {
 				if (note_flags[i] & (NOTE_SHOW | NOTE_DELAY | (menu ? NOTE_MENU : 0)) || note_delay[i]) {
-					int x = i & 1 ? 2 : 320 - strlen(shorten(note[i], 39)) * 8 - 2,
-						y = i > 0 ? 240 - 8 - 2 : 2;
+					int x = i & 1 ? 2 : 640 - strlen(shorten(note[i], 39)) * 8 - 2,
+						y = i > 0 ? 480 - 8 - 2 : 2;
 					outline8x8(surface, x, y, shorten(note[i], 39), 0xffff, 0x0000);
 					
 					if (note_flags[i] & NOTE_DELAY && note_delay[i] == 0)
@@ -265,16 +265,16 @@ int main( int argc, char *argv[] ) {
 			if SDL_MUSTLOCK(surface) SDL_LockSurface(surface);
 			
 			if (input[4]) {
-				outline8x8(surface, 4, 240 - 10, "Open2xIV v0.10", 0xffff, 0x0000);
+				outline8x8(surface, 4, 480 - 10, "Open2xIV v0.10", 0xffff, 0x0000);
 				
 				const char buffer[] = "!sseldniM yb dedoc"; // sneaky... not really
 				static int j = 0; j++;
 				for (unsigned int i = 0; i < strlen(buffer); i++) {
-					char8x8(surface, 320 - i * 8 - 12 - 1, 240 - 10,     buffer[i], 0xffff);
-					char8x8(surface, 320 - i * 8 - 12,     240 - 10 - 1, buffer[i], 0xffff);
-					char8x8(surface, 320 - i * 8 - 12 + 1, 240 - 10,     buffer[i], 0xffff);
-					char8x8(surface, 320 - i * 8 - 12,     240 - 10 + 1, buffer[i], 0xffff);
-					char8x8(surface, 320 - i * 8 - 12,     240 - 10,     buffer[i], (i + j) % 3 == 2 ? 0xd000 : ((i + j) % 3 == 1 ? 0x0340 : 0x001a));
+					char8x8(surface, 640 - i * 8 - 12 - 1, 480 - 10,     buffer[i], 0xffff);
+					char8x8(surface, 640 - i * 8 - 12,     480 - 10 - 1, buffer[i], 0xffff);
+					char8x8(surface, 640 - i * 8 - 12 + 1, 480 - 10,     buffer[i], 0xffff);
+					char8x8(surface, 640 - i * 8 - 12,     480 - 10 + 1, buffer[i], 0xffff);
+					char8x8(surface, 640 - i * 8 - 12,     480 - 10,     buffer[i], (i + j) % 3 == 2 ? 0xd000 : ((i + j) % 3 == 1 ? 0x0340 : 0x001a));
 				}
 				
 				delay += 100;
@@ -377,9 +377,9 @@ void rotate( void ) {
 	if (rotation == 0) {
 		return;
 	} else if (rotation == 2) {
-		const int src_w = 320, src_h = 240;
+		const int src_w = 640, src_h = 480;
 		
-		const int dst_pitch = 320 * Bpp;
+		const int dst_pitch = 640 * Bpp;
 		
 		dst += src_h /*dst_h*/ * dst_pitch;
 		for (int y = src_h; y; y--) {
@@ -393,10 +393,10 @@ void rotate( void ) {
 		}
 		return;
 	} else {
-		const int src_w = 240, src_h = 320,
-		          dst_w = 320, dst_h = 240;
+		const int src_w = 480, src_h = 640,
+		          dst_w = 640, dst_h = 480;
 		
-		const int dst_pitch = 320 * Bpp;
+		const int dst_pitch = 640 * Bpp;
 		
 		switch (rotation)
 		{
@@ -471,11 +471,11 @@ void set_scale( fixed new_scale ) {
 	pan_rect.w = fixed_mul(image->w, scale);
 	pan_rect.h = fixed_mul(image->h, scale);
 	
-	// for blitting from scaled surface, which is max of 320x240
+	// for blitting from scaled surface, which is max of 640x480
 	scaled_rect.w = min(pan_rect.w, scaled->w);
 	scaled_rect.h = min(pan_rect.h, scaled->h);
 	
-	// recenter the panning when image larger than 320x240
+	// recenter the panning when image larger than 640x480
 	pan_rect.x = max(center_x - scaled_rect.w / 2, 0);
 	pan_rect.y = max(center_y - scaled_rect.h / 2, 0);
 	
@@ -579,7 +579,7 @@ void redraw( void ) {
 	rotated_rect.x = (rotation == 1 || rotation == 2) ? scaled_rot[0]->w - rotated_rect.w : 0;
 	rotated_rect.y = (rotation == 3 || rotation == 2) ? scaled_rot[0]->h - rotated_rect.h : 0;
 	
-	// center the scaled image when smaller than 320x240
+	// center the scaled image when smaller than 640x480
 	surface_rect.x = (scaled_rot[0]->w - rotated_rect.w) / 2;
 	surface_rect.y = (scaled_rot[0]->h - rotated_rect.h) / 2;
 	
